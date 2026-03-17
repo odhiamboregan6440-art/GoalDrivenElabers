@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Us & Messages — CreativeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    .page-hero {
+      padding: 100px 80px 60px;
+      background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(27,79,138,0.3) 0%, transparent 70%), var(--navy);
+      border-bottom: 1px solid rgba(46,156,202,0.12);
+      text-align: center;
+    }
+
+    /* Join options */
+    .join-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .join-card {
+      background: rgba(27,79,138,0.1);
+      border: 1px solid rgba(46,156,202,0.15);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      text-align: center;
+      transition: all var(--transition);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .join-card:hover { border-color: rgba(46,156,202,0.4); transform: translateY(-4px); box-shadow: var(--glow); }
+    .join-icon { font-size: 2.8rem; margin-bottom: 20px; }
+    .join-card h3 { font-family: var(--font-display); font-size: 1.2rem; color: var(--navy); margin-bottom: 12px; }
+    .join-card p { font-size: 0.9rem; color: #2d5a3d; line-height: 1.7; margin-bottom: 28px; flex: 1; }
+
+    /* Form */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block; font-size: 0.82rem; font-weight: 600; color: var(--sky);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; background: rgba(27,79,138,0.1); border: 1px solid rgba(46,156,202,0.2);
+      border-radius: var(--radius); padding: 14px 18px; color: var(--navy);
+      font-family: var(--font-body); font-size: 0.95rem; outline: none;
+      transition: border-color var(--transition); appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--sky); background: rgba(46,156,202,0.08); }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: #3d6b4a; }
+    .form-group select option { background: var(--navy); color: var(--navy); }
+    .form-group textarea { resize: vertical; min-height: 140px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Contact info */
+    .contact-info { display: flex; flex-direction: column; gap: 20px; }
+    .info-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 20px 24px; background: rgba(27,79,138,0.1);
+      border: 1px solid rgba(46,156,202,0.12); border-radius: var(--radius);
+      transition: all var(--transition);
+    }
+    .info-item:hover { border-color: rgba(46,156,202,0.3); }
+    .info-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .info-item h4 { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .info-item p, .info-item a { font-size: 0.9rem; color: #2d5a3d; }
+    .info-item a:hover { color: var(--sky); }
+    .social-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 32px; }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(27,79,138,0.15); border: 1px solid rgba(46,156,202,0.2);
+      border-radius: var(--radius); padding: 12px 20px; color: var(--text);
+      font-size: 0.9rem; font-weight: 500; transition: all var(--transition); text-decoration: none;
+    }
+    .social-btn:hover { border-color: var(--sky); background: rgba(46,156,202,0.1); color: var(--sky); }
+
+    /* ── INBOX ── */
+    #inbox-section {
+      background: rgba(27,79,138,0.06);
+      border-top: 1px solid rgba(46,156,202,0.1);
+    }
+    .inbox-lock {
+      max-width: 420px; margin: 0 auto; text-align: center; padding: 20px 0;
+    }
+    .inbox-lock .lock-icon { font-size: 3rem; margin-bottom: 16px; }
+    .inbox-lock h3 { font-family: var(--font-display); font-size: 1.4rem; color: var(--navy); margin-bottom: 8px; }
+    .inbox-lock p { color: #2d5a3d; margin-bottom: 28px; font-size: 0.9rem; line-height: 1.7; }
+    .pin-input-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .pin-input-row input {
+      width: 60px; height: 60px; text-align: center; font-size: 1.6rem; font-weight: 700;
+      background: rgba(27,79,138,0.2); border: 2px solid rgba(46,156,202,0.3);
+      border-radius: var(--radius); color: var(--navy); outline: none;
+      transition: border-color var(--transition);
+    }
+    .pin-input-row input:focus { border-color: var(--sky); }
+    #pin-error { color: #ff6b6b; font-size: 0.85rem; min-height: 20px; margin-bottom: 8px; }
+
+    /* Inbox panel */
+    #inbox-panel { display: none; }
+    .inbox-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    .inbox-header h3 { font-family: var(--font-display); font-size: 1.4rem; color: var(--navy); }
+    .inbox-stats { display: flex; gap: 20px; }
+    .inbox-stat {
+      background: rgba(27,79,138,0.2); border: 1px solid rgba(46,156,202,0.2);
+      border-radius: var(--radius); padding: 10px 18px; text-align: center;
+    }
+    .inbox-stat .num { font-size: 1.4rem; font-weight: 700; color: var(--sky); }
+    .inbox-stat .lbl { font-size: 0.72rem; color: #3d6b4a; text-transform: uppercase; letter-spacing: 0.07em; }
+    .inbox-actions { display: flex; gap: 12px; }
+    .msg-filter {
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(27,79,138,0.1); border: 1px solid rgba(46,156,202,0.15);
+      border-radius: 100px; padding: 6px 16px; color: #2d5a3d;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all var(--transition);
+    }
+    .filter-btn.active, .filter-btn:hover { background: rgba(46,156,202,0.15); border-color: var(--sky); color: var(--sky); }
+    .messages-list { display: flex; flex-direction: column; gap: 12px; }
+    .msg-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(46,156,202,0.15);
+      border-radius: var(--radius-lg); padding: 20px 24px;
+      transition: all var(--transition); cursor: pointer; position: relative;
+    }
+    .msg-card:hover { border-color: rgba(46,156,202,0.4); background: rgba(27,79,138,0.15); }
+    .msg-card.unread { border-left: 3px solid var(--sky); }
+    .msg-card.unread .msg-name { color: var(--navy); }
+    .msg-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+    .msg-name { font-weight: 700; font-size: 0.95rem; color: var(--light); }
+    .msg-time { font-size: 0.75rem; color: #3d6b4a; flex-shrink: 0; }
+    .msg-meta { display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .msg-tag {
+      font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+      text-transform: uppercase; letter-spacing: 0.07em;
+    }
+    .msg-tag.youth { background: rgba(46,156,202,0.15); color: var(--sky); }
+    .msg-tag.mentor { background: rgba(46,175,100,0.15); color: #4ecb71; }
+    .msg-tag.business { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .msg-tag.investor { background: rgba(212,175,55,0.2); color: #d4af37; }
+    .msg-tag.other { background: rgba(150,100,200,0.15); color: #b57bee; }
+    .msg-tag.unread-badge { background: rgba(46,156,202,0.2); color: var(--sky); }
+    .msg-preview { font-size: 0.88rem; color: #2d5a3d; line-height: 1.5; }
+    .msg-email { font-size: 0.78rem; color: #3d6b4a; margin-top: 4px; }
+
+    /* Message detail modal */
+    .msg-detail {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(8,18,32,0.92); align-items: center; justify-content: center; padding: 24px;
+    }
+    .msg-detail.open { display: flex; }
+    .msg-detail-inner {
+      background: #0d1b2a; border: 1px solid rgba(46,156,202,0.25);
+      border-radius: var(--radius-lg); width: 100%; max-width: 620px;
+      max-height: 85vh; overflow-y: auto; padding: 36px 40px;
+    }
+    .msg-detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .msg-detail-header h4 { font-family: var(--font-display); font-size: 1.2rem; color: var(--navy); }
+    .close-btn {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%; width: 36px; height: 36px; color: #2d5a3d;
+      font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition); flex-shrink: 0;
+    }
+    .close-btn:hover { background: rgba(255,100,100,0.2); color: #ff6b6b; border-color: #ff6b6b; }
+    .detail-field { margin-bottom: 14px; }
+    .detail-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #3d6b4a; margin-bottom: 4px; }
+    .detail-val { font-size: 0.95rem; color: var(--text); }
+    .detail-msg {
+      background: rgba(27,79,138,0.1); border: 1px solid rgba(46,156,202,0.15);
+      border-radius: var(--radius); padding: 16px 20px; color: #2d5a3d;
+      line-height: 1.75; font-size: 0.95rem; margin-top: 8px;
+    }
+    .reply-btn {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+      background: rgba(46,156,202,0.15); border: 1px solid var(--sky);
+      border-radius: var(--radius); padding: 12px 24px;
+      color: var(--sky); font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; transition: all var(--transition); cursor: pointer;
+    }
+    .reply-btn:hover { background: rgba(46,156,202,0.25); }
+    .mark-read-btn {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; margin-left: 12px;
+      background: rgba(78,203,113,0.1); border: 1px solid #4ecb71;
+      border-radius: var(--radius); padding: 12px 24px;
+      color: #4ecb71; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .mark-read-btn:hover { background: rgba(78,203,113,0.2); }
+    .empty-inbox {
+      text-align: center; padding: 60px 20px; color: #3d6b4a;
+    }
+    .empty-inbox .ico { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+    .logout-btn {
+      background: transparent; border: 1px solid rgba(255,100,100,0.3);
+      border-radius: var(--radius); padding: 8px 18px; color: rgba(255,150,150,0.8);
+      font-size: 0.82rem; cursor: pointer; transition: all var(--transition);
+    }
+    .logout-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,100,100,0.08); }
+
+    /* Partners */
+    .partner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .partner-card {
+      background: rgba(27,79,138,0.08); border: 1px solid rgba(46,156,202,0.12);
+      border-radius: var(--radius); padding: 28px 24px; transition: all var(--transition);
+    }
+    .partner-card:hover { border-color: rgba(46,156,202,0.3); transform: translateY(-3px); }
+    .partner-card h4 { font-family: var(--font-display); font-size: 0.95rem; color: var(--navy); margin-bottom: 8px; }
+    .partner-card p { font-size: 0.85rem; color: #2d5a3d; line-height: 1.65; }
+    .partner-type { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--sky); text-transform: uppercase; margin-bottom: 10px; }
+
+    @media (max-width: 1024px) {
+      .join-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .partner-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .page-hero { padding: 80px 24px 48px; }
+      .form-row { grid-template-columns: 1fr; }
+      .partner-grid { grid-template-columns: 1fr; }
+      .inbox-stats { flex-wrap: wrap; }
+      .msg-detail-inner { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="index.html"><img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" /></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="problem.html">The Problem</a></li>
+    <li><a href="platform.html">Platform</a></li>
+    <li><a href="impact.html">Impact</a></li>
+    <li><a href="contact.html" class="nav-cta">Join Us</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="section-label" style="justify-content:center;">Get Involved</div>
+    <h1 class="section-title" style="font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:16px;">Join the <span>movement</span></h1>
+    <p style="font-size:1.1rem;color:#2d5a3d;max-width:580px;margin:0 auto;line-height:1.75;">Whether you are a creative youth in Nyamirambo, a mentor, a business, or an investor — there is a place for you in CreativeLink.</p>
+  </div>
+
+  <!-- JOIN OPTIONS -->
+  <section>
+    <div class="join-grid">
+      <div class="join-card reveal">
+        <div class="join-icon">🎨</div>
+        <h3>Creative Youth</h3>
+        <p>You have a skill. We have the platform. Join free, build your portfolio, connect with mentors, and start earning from your creativity.</p>
+        <a href="#contact-form" class="btn btn-primary">Join Free →</a>
+      </div>
+      <div class="join-card reveal reveal-delay-1">
+        <div class="join-icon">🤝</div>
+        <h3>Become a Mentor</h3>
+        <p>You are a creative professional in Kigali. Share your experience with the next generation of Nyamirambo talent. Apply to join our mentor network.</p>
+        <a href="#contact-form" class="btn btn-outline">Apply as Mentor →</a>
+      </div>
+      <div class="join-card reveal reveal-delay-2">
+        <div class="join-icon">🏢</div>
+        <h3>Business / Partner</h3>
+        <p>Post creative gigs, source Rwanda's most motivated youth talent, or partner with us to expand CreativeLink's reach and impact.</p>
+        <a href="#contact-form" class="btn btn-outline">Partner With Us →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT FORM + INFO -->
+  <section id="contact-form">
+    <div class="form-grid">
+
+      <!-- FORM -->
+      <div>
+        <div class="section-label">Send a Message</div>
+        <h2 class="section-title">Get in <span>touch</span></h2>
+        <p style="color:#2d5a3d;margin-bottom:36px;line-height:1.75;">Fill out the form and the GoalDriven Elabers team will respond within 48 hours.</p>
+
+        <form id="contact-form-el" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="f-first" placeholder="Amahle" required />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="f-last" placeholder="Uwimana" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="f-email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>Phone (Optional)</label>
+            <input type="tel" id="f-phone" placeholder="+250 7XX XXX XXX" />
+          </div>
+          <div class="form-group">
+            <label>I am a...</label>
+            <select id="f-role" required>
+              <option value="" disabled selected>Select your role</option>
+              <option>Creative Youth (Nyamirambo)</option>
+              <option>Creative Professional / Mentor</option>
+              <option>Business / Event Organizer</option>
+              <option>NGO / Development Organization</option>
+              <option>Investor / Grant Maker</option>
+              <option>Journalist / Media</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Creative Skill (if applicable)</label>
+            <select id="f-skill">
+              <option value="" disabled selected>Select skill</option>
+              <option>Tailoring / Fashion</option>
+              <option>Music / Audio Production</option>
+              <option>Graphic Design</option>
+              <option>Photography / Videography</option>
+              <option>Crafts / Handmade Goods</option>
+              <option>Other Creative Skill</option>
+              <option>N/A</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Message</label>
+            <textarea id="f-msg" placeholder="Tell us about yourself and how you want to get involved..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+            Send Message →
+          </button>
+        </form>
+
+        <div id="form-success" style="display:none;margin-top:20px;padding:20px;background:rgba(46,156,202,0.1);border:1px solid rgba(46,156,202,0.3);border-radius:var(--radius);color:var(--sky);text-align:center;">
+          ✅ Message received! The GoalDriven Elabers team will be in touch within 48 hours.
+        </div>
+      </div>
+
+      <!-- CONTACT INFO -->
+      <div>
+        <div class="section-label">Contact Info</div>
+        <h2 class="section-title">Reach <span>us directly</span></h2>
+        <div class="contact-info" style="margin-top:32px;">
+          <div class="info-item reveal">
+            <span class="info-icon">📍</span>
+            <div>
+              <h4>Location</h4>
+              <p>Nyamirambo, Kigali, Rwanda<br/>African Leadership University</p>
+            </div>
+          </div>
+          <div class="info-item reveal reveal-delay-1">
+            <span class="info-icon">📧</span>
+            <div>
+              <h4>Email</h4>
+              <a href="mailto:goaldriven@goaldriven.com">goaldriven@goaldriven.com</a>
+            </div>
+          </div>
+          <div class="info-item reveal reveal-delay-2">
+            <span class="info-icon">📸</span>
+            <div>
+              <h4>Instagram</h4>
+              <a href="#">@alupreneurship</a><br/>
+              <a href="#">@creativelink.rw</a>
+            </div>
+          </div>
+          <div class="info-item reveal reveal-delay-3">
+            <span class="info-icon">🏫</span>
+            <div>
+              <h4>Programme</h4>
+              <p>ALU E-Lab 2025<br/>Job Creation through Arts, Design & Culture</p>
+            </div>
+          </div>
+        </div>
+        <div class="social-row">
+          <a href="#" class="social-btn">📸 Instagram</a>
+          <a href="#" class="social-btn">▶ YouTube</a>
+          <a href="#" class="social-btn">in LinkedIn</a>
+        </div>
+
+        <!-- TEAM PHOTOS -->
+        <div style="margin-top:40px;" class="reveal">
+          <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--sky);margin-bottom:12px;">GoalDriven Elabers · In Action</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;">
+              <img src="assets/group5.jpeg" alt="GoalDriven Elabers" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+            </div>
+            <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;">
+              <img src="assets/group3.jpeg" alt="GoalDriven Elabers at ALU" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:40px;padding:24px;background:rgba(27,79,138,0.12);border:1px solid rgba(46,156,202,0.2);border-radius:var(--radius-lg);">
+          <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--sky);margin-bottom:8px;">Team Only</div>
+          <h4 style="color:var(--navy);margin-bottom:8px;">📬 Message Inbox</h4>
+          <p style="font-size:0.85rem;color:#2d5a3d;margin-bottom:16px;line-height:1.65;">GoalDriven Elabers team members can access all received messages in the secure inbox below.</p>
+          <a href="#inbox-section" class="btn btn-outline" style="font-size:0.85rem;padding:10px 20px;">Open Team Inbox →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── TEAM INBOX ── -->
+  <section id="inbox-section">
+    <div class="section-label">Team Access</div>
+    <h2 class="section-title">Message <span>Inbox</span></h2>
+    <p class="section-desc">All messages sent through the contact form appear here. Team members only — enter the 4-digit PIN to access.</p>
+
+    <!-- LOCK SCREEN -->
+    <div id="inbox-lock" class="inbox-lock">
+      <div class="lock-icon">🔒</div>
+      <h3>Team Inbox</h3>
+      <p>Enter the 4-digit PIN to access all client messages sent to GoalDriven Elabers.</p>
+      <div class="pin-input-row">
+        <input type="password" maxlength="1" class="pin-digit" id="p1" inputmode="numeric" />
+        <input type="password" maxlength="1" class="pin-digit" id="p2" inputmode="numeric" />
+        <input type="password" maxlength="1" class="pin-digit" id="p3" inputmode="numeric" />
+        <input type="password" maxlength="1" class="pin-digit" id="p4" inputmode="numeric" />
+      </div>
+      <div id="pin-error"></div>
+      <button class="btn btn-primary" onclick="checkPin()" style="margin-top:4px;">Unlock Inbox →</button>
+    </div>
+
+    <!-- INBOX PANEL -->
+    <div id="inbox-panel">
+      <div class="inbox-header">
+        <div>
+          <h3>📬 GoalDriven Inbox</h3>
+          <p style="font-size:0.85rem;color:#2d5a3d;margin-top:4px;">Messages sent to goaldriven@goaldriven.com</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div class="inbox-stats">
+            <div class="inbox-stat">
+              <div class="num" id="stat-total">0</div>
+              <div class="lbl">Total</div>
+            </div>
+            <div class="inbox-stat">
+              <div class="num" id="stat-unread">0</div>
+              <div class="lbl">Unread</div>
+            </div>
+          </div>
+          <button class="logout-btn" onclick="lockInbox()">🔒 Lock</button>
+        </div>
+      </div>
+
+      <div class="msg-filter">
+        <button class="filter-btn active" onclick="filterMsgs('all', this)">All</button>
+        <button class="filter-btn" onclick="filterMsgs('unread', this)">Unread</button>
+        <button class="filter-btn" onclick="filterMsgs('Creative Youth (Nyamirambo)', this)">Youth</button>
+        <button class="filter-btn" onclick="filterMsgs('Creative Professional / Mentor', this)">Mentors</button>
+        <button class="filter-btn" onclick="filterMsgs('Business / Event Organizer', this)">Business</button>
+        <button class="filter-btn" onclick="filterMsgs('Investor / Grant Maker', this)">Investors</button>
+      </div>
+
+      <div class="messages-list" id="messages-list"></div>
+    </div>
+  </section>
+
+  <!-- MESSAGE DETAIL MODAL -->
+  <div class="msg-detail" id="msg-detail">
+    <div class="msg-detail-inner">
+      <div class="msg-detail-header">
+        <h4 id="d-name">—</h4>
+        <button class="close-btn" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Email</div>
+        <div class="detail-val" id="d-email">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Phone</div>
+        <div class="detail-val" id="d-phone">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Role</div>
+        <div class="detail-val" id="d-role">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Creative Skill</div>
+        <div class="detail-val" id="d-skill">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Received</div>
+        <div class="detail-val" id="d-time">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Message</div>
+        <div class="detail-msg" id="d-msg">—</div>
+      </div>
+      <div>
+        <a id="d-reply" href="#" class="reply-btn">✉️ Reply via Email</a>
+        <button class="mark-read-btn" id="d-mark" onclick="markCurrentRead()">✓ Mark as Read</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PARTNERS -->
+  <section>
+    <div class="section-label">Our Ecosystem</div>
+    <h2 class="section-title">Key <span>partners & stakeholders</span></h2>
+    <p class="section-desc">CreativeLink is built in partnership with — and accountable to — the organizations and institutions that shape Kigali's creative economy.</p>
+    <div class="partner-grid">
+      <div class="partner-card reveal">
+        <div class="partner-type">Government</div>
+        <h4>Rwanda Development Board (RDB)</h4>
+        <p>Endorsement, SME funding referrals, and alignment with Rwanda's national digital transformation strategy.</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-1">
+        <div class="partner-type">Tech Ecosystem</div>
+        <h4>kLab Innovation Hub</h4>
+        <p>Platform development support, digital mentorship network, and connections to Rwanda's tech startup community.</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-2">
+        <div class="partner-type">Education</div>
+        <h4>IPRC Kigali / Local Schools</h4>
+        <p>Student pipeline, classroom integration, and access to the creative vocational training ecosystem.</p>
+      </div>
+      <div class="partner-card reveal">
+        <div class="partner-type">Community</div>
+        <h4>Nyamirambo Women's Cooperatives</h4>
+        <p>Craft market access, community trust networks, and outreach channels to female creative entrepreneurs.</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-1">
+        <div class="partner-type">Development</div>
+        <h4>GIZ / USAID Partners</h4>
+        <p>NGO cohort funding, international development alignment, and impact reporting validation frameworks.</p>
+      </div>
+      <div class="partner-card reveal reveal-delay-2">
+        <div class="partner-type">Telecom</div>
+        <h4>MTN Rwanda / Airtel</h4>
+        <p>Mobile money API integration, affordable data bundle partnerships, and SMS fallback notifications.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <div class="band" style="text-align:center;">
+    <p class="band-quote">"Nyamirambo's creative youth will not just find jobs.<br/><span>They will create them."</span></p>
+    <p class="band-attr">— GoalDriven Elabers</p>
+    <div style="margin-top:32px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="#contact-form" class="btn btn-primary">Join CreativeLink →</a>
+      <a href="platform.html" class="btn btn-outline">See the Platform</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" />
+      <p>Turning Nyamirambo's creative talent into sustainable careers through the CreativeLink platform.</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="problem.html">The Problem</a></li><li><a href="platform.html">Platform</a></li>
+      <li><a href="impact.html">Impact</a></li><li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul>
+      <li><a href="platform.html#skills">Skills Training</a></li>
+      <li><a href="platform.html#mentors">Mentorship</a></li>
+      <li><a href="platform.html#portfolio">Portfolio</a></li>
+      <li><a href="platform.html#gigs">Gig Marketplace</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul>
+      <li><a href="#">@alupreneurship</a></li>
+      <li><a href="#">@creativelink.rw</a></li>
+      <li><a href="contact.html">Join the Platform</a></li>
+      <li><a href="contact.html">Partner With Us</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 <span>GoalDriven Elabers</span> · ALU E-Lab</span>
+    <span>Nyamirambo · Kigali · Rwanda</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // ── Storage key ──────────────────────────────────────────
+  const STORE_KEY = 'creativelink_messages';
+  const PIN = '6440';
+  let currentMsgId = null;
+  let currentFilter = 'all';
+
+  // ── Load / save messages ─────────────────────────────────
+  function loadMsgs() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+  function saveMsgs(msgs) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(msgs));
+  }
+
+  // ── Tag style by role ────────────────────────────────────
+  function roleTag(role) {
+    if (!role) return '';
+    if (role.includes('Youth')) return 'youth';
+    if (role.includes('Mentor') || role.includes('Professional')) return 'mentor';
+    if (role.includes('Business') || role.includes('Event')) return 'business';
+    if (role.includes('Investor')) return 'investor';
+    return 'other';
+  }
+
+  // ── Submit form ──────────────────────────────────────────
+  function handleSubmit(e) {
+    e.preventDefault();
+    const first = document.getElementById('f-first').value.trim();
+    const last  = document.getElementById('f-last').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    const role  = document.getElementById('f-role').value;
+    const skill = document.getElementById('f-skill').value;
+    const msg   = document.getElementById('f-msg').value.trim();
+
+    const msgs = loadMsgs();
+    msgs.unshift({
+      id: Date.now(),
+      name: first + ' ' + last,
+      email, phone, role, skill, msg,
+      time: new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+      read: false
+    });
+    saveMsgs(msgs);
+
+    document.getElementById('contact-form-el').reset();
+    document.getElementById('form-success').style.display = 'block';
+    setTimeout(() => document.getElementById('form-success').style.display = 'none', 5000);
+  }
+
+  // ── PIN check ────────────────────────────────────────────
+  function checkPin() {
+    const pin = ['p1','p2','p3','p4'].map(id => document.getElementById(id).value).join('');
+    if (pin === PIN) {
+      document.getElementById('inbox-lock').style.display = 'none';
+      document.getElementById('inbox-panel').style.display = 'block';
+      renderInbox();
+    } else {
+      document.getElementById('pin-error').textContent = 'Incorrect PIN. Please try again.';
+      ['p1','p2','p3','p4'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('p1').focus();
+      setTimeout(() => document.getElementById('pin-error').textContent = '', 3000);
+    }
+  }
+
+  function lockInbox() {
+    document.getElementById('inbox-panel').style.display = 'none';
+    document.getElementById('inbox-lock').style.display = 'block';
+    ['p1','p2','p3','p4'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  // ── Auto-advance PIN digits ──────────────────────────────
+  document.querySelectorAll('.pin-digit').forEach((inp, i, arr) => {
+    inp.addEventListener('input', () => {
+      if (inp.value && i < arr.length - 1) arr[i+1].focus();
+      if (i === arr.length - 1 && inp.value) checkPin();
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) arr[i-1].focus();
+      if (e.key === 'Enter') checkPin();
+    });
+  });
+
+  // ── Render inbox ─────────────────────────────────────────
+  function renderInbox() {
+    const msgs = loadMsgs();
+    const list = document.getElementById('messages-list');
+    const unread = msgs.filter(m => !m.read).length;
+    document.getElementById('stat-total').textContent  = msgs.length;
+    document.getElementById('stat-unread').textContent = unread;
+
+    let filtered = msgs;
+    if (currentFilter === 'unread') filtered = msgs.filter(m => !m.read);
+    else if (currentFilter !== 'all') filtered = msgs.filter(m => m.role === currentFilter);
+
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty-inbox"><div class="ico">📭</div><p>${msgs.length === 0 ? 'No messages yet. When clients send messages, they will appear here.' : 'No messages match this filter.'}</p></div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(m => `
+      <div class="msg-card ${m.read ? '' : 'unread'}" onclick="openDetail(${m.id})">
+        <div class="msg-top">
+          <span class="msg-name">${m.name}</span>
+          <span class="msg-time">${m.time}</span>
+        </div>
+        <div class="msg-meta">
+          <span class="msg-tag ${roleTag(m.role)}">${m.role || 'Unknown'}</span>
+          ${!m.read ? '<span class="msg-tag unread-badge">New</span>' : ''}
+          ${m.skill && m.skill !== 'N/A' ? `<span class="msg-tag other">${m.skill}</span>` : ''}
+        </div>
+        <div class="msg-preview">${m.msg ? m.msg.substring(0, 120) + (m.msg.length > 120 ? '...' : '') : '(No message body)'}</div>
+        <div class="msg-email">${m.email}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Filter ───────────────────────────────────────────────
+  function filterMsgs(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderInbox();
+  }
+
+  // ── Open detail ──────────────────────────────────────────
+  function openDetail(id) {
+    const msgs = loadMsgs();
+    const m = msgs.find(x => x.id === id);
+    if (!m) return;
+    currentMsgId = id;
+
+    // Mark as read
+    m.read = true;
+    saveMsgs(msgs);
+    renderInbox();
+
+    document.getElementById('d-name').textContent  = m.name;
+    document.getElementById('d-email').textContent = m.email;
+    document.getElementById('d-phone').textContent = m.phone || '—';
+    document.getElementById('d-role').textContent  = m.role  || '—';
+    document.getElementById('d-skill').textContent = m.skill || '—';
+    document.getElementById('d-time').textContent  = m.time;
+    document.getElementById('d-msg').textContent   = m.msg   || '(No message)';
+    document.getElementById('d-reply').href = `mailto:${m.email}?subject=Re: CreativeLink Enquiry&body=Dear ${m.name.split(' ')[0]},\n\nThank you for reaching out to GoalDriven Elabers and CreativeLink.\n\n`;
+    document.getElementById('msg-detail').classList.add('open');
+  }
+
+  function closeDetail() {
+    document.getElementById('msg-detail').classList.remove('open');
+    currentMsgId = null;
+  }
+
+  function markCurrentRead() {
+    if (!currentMsgId) return;
+    const msgs = loadMsgs();
+    const m = msgs.find(x => x.id === currentMsgId);
+    if (m) { m.read = true; saveMsgs(msgs); renderInbox(); }
+    closeDetail();
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('msg-detail').addEventListener('click', function(e) {
+    if (e.target === this) closeDetail();
+  });
+</script>
+</body>
+</html>

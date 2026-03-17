@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoalDriven Elabers</title>
+  <meta name="description" content="Turning Nyamirambo's creative talent into sustainable livelihoods. CreativeLink is the platform for skills, mentorship, and market access." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* Overview section */
+    .overview { background: linear-gradient(180deg, var(--navy) 0%, rgba(27,79,138,0.08) 100%); }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .overview-text .section-desc { margin-bottom: 32px; }
+    .overview-features { display: flex; flex-direction: column; gap: 16px; }
+    .overview-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(27,79,138,0.1);
+      border: 1px solid rgba(46,156,202,0.12);
+      border-radius: var(--radius);
+      transition: all var(--transition);
+    }
+    .overview-feature:hover { border-color: rgba(46,156,202,0.3); background: rgba(27,79,138,0.2); }
+    .overview-feature .num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: rgba(46,156,202,0.3);
+      line-height: 1;
+      min-width: 40px;
+    }
+    .overview-feature h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .overview-feature p { font-size: 0.88rem; color: #2d5a3d; }
+
+    /* Poster gallery */
+    .poster-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .poster-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(46,156,202,0.15);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .poster-item:hover {
+      transform: translateY(-6px);
+      border-color: rgba(46,156,202,0.4);
+      box-shadow: var(--shadow), var(--glow);
+    }
+    .poster-item img { width: 100%; display: block; aspect-ratio: 1; object-fit: cover; }
+    .poster-label {
+      padding: 10px 14px;
+      background: rgba(13,27,42,0.9);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--sky);
+      letter-spacing: 0.04em;
+    }
+
+    /* Video challenges grid */
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 48px;
+    }
+    .challenge-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(46,156,202,0.18);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .challenge-card:first-child {
+      grid-column: span 2;
+    }
+    .challenge-card:hover {
+      border-color: rgba(46,156,202,0.45);
+      box-shadow: var(--shadow), var(--glow);
+      transform: translateY(-4px);
+    }
+    .challenge-card .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: #0a1628;
+    }
+    .challenge-card .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .challenge-info {
+      padding: 16px 20px 20px;
+    }
+    .challenge-badge {
+      display: inline-block;
+      background: rgba(46,156,202,0.15);
+      color: var(--sky);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .challenge-info h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--light);
+      margin: 0 0 6px;
+    }
+    .challenge-info p {
+      font-size: 0.82rem;
+      color: #3d6b4a;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1024px) {
+      .overview-grid { grid-template-columns: 1fr; gap: 48px; }
+      .poster-row { grid-template-columns: repeat(2, 1fr); }
+      .challenges-grid { grid-template-columns: 1fr 1fr; }
+      .challenge-card:first-child { grid-column: span 2; }
+    }
+    @media (max-width: 640px) {
+      .challenges-grid { grid-template-columns: 1fr; }
+      .challenge-card:first-child { grid-column: span 1; }
+    }
+    @media (max-width: 768px) {
+      .poster-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav id="navbar">
+  <a class="nav-logo" href="index.html">
+    <img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="problem.html">The Problem</a></li>
+    <li><a href="platform.html">Platform</a></li>
+    <li><a href="impact.html">Impact</a></li>
+    <li><a href="contact.html" class="nav-cta">Join Us</a></li>
+  </ul>
+  <div class="nav-hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="page">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-circles">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">ALU E-Lab 2025 · $10,000 Grant Competition</div>
+      <h1 class="hero-title">
+        GoalDriven<span>Elabers</span>
+      </h1>
+      <p class="hero-sub">Nyamirambo · Kigali · Rwanda</p>
+      <p class="hero-desc">
+        Turning Nyamirambo's creative talent into sustainable careers — through skills training, mentorship, portfolio showcase, and a gig marketplace.
+      </p>
+      <div class="hero-actions">
+        <a href="platform.html" class="btn btn-primary">Explore the Platform →</a>
+        <a href="problem.html" class="btn btn-outline">The Problem We Solve</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="assets/poster_elab.png" alt="CreativeLink E-Lab Poster" />
+    </div>
+  </section>
+
+  <!-- ── STATS BAND ── -->
+  <div class="divider"></div>
+  <section style="padding: 64px 80px;">
+    <div class="grid-4">
+      <div class="stat-box reveal">
+        <div class="stat-num" data-target="15.4" data-suffix="%">0%</div>
+        <div class="stat-label">Youth Unemployment</div>
+        <div class="stat-sub">in Nyamirambo, Kigali</div>
+      </div>
+      <div class="stat-box reveal reveal-delay-1">
+        <div class="stat-num" data-target="125794" data-prefix="">0</div>
+        <div class="stat-label">Jobs Missed</div>
+        <div class="stat-sub">Rwanda NST2 gap, 2017–2023</div>
+      </div>
+      <div class="stat-box reveal reveal-delay-2">
+        <div class="stat-num" data-target="500" data-suffix="+">0</div>
+        <div class="stat-label">Youth Targeted</div>
+        <div class="stat-sub">Year 1 goal</div>
+      </div>
+      <div class="stat-box reveal reveal-delay-3">
+        <div class="stat-num" data-target="10" data-prefix="$" data-suffix="K">$0</div>
+        <div class="stat-label">Grant Sought</div>
+        <div class="stat-sub">ALU E-Lab 2025</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── OVERVIEW ── -->
+  <section class="overview">
+    <div class="overview-grid">
+      <div class="overview-text">
+        <div class="section-label">What We Built</div>
+        <h2 class="section-title">Four pillars.<br /><span>One platform.</span></h2>
+        <p class="section-desc">
+          CreativeLink integrates skills training, mentorship, portfolio showcase, and a gig marketplace into one mobile-first, bilingual platform — built for and by the Nyamirambo community.
+        </p>
+        <a href="platform.html" class="btn btn-primary">See the Full Platform →</a>
+      </div>
+      <div class="overview-features">
+        <div class="overview-feature reveal">
+          <span class="num">01</span>
+          <div>
+            <h4>Skills Training</h4>
+            <p>Bite-sized modules in Kinyarwanda & French — tailoring, music, design, photography, crafts.</p>
+          </div>
+        </div>
+        <div class="overview-feature reveal reveal-delay-1">
+          <span class="num">02</span>
+          <div>
+            <h4>Mentor Matching</h4>
+            <p>Connect with verified local creative professionals. Direct messaging and session booking.</p>
+          </div>
+        </div>
+        <div class="overview-feature reveal reveal-delay-2">
+          <span class="num">03</span>
+          <div>
+            <h4>Portfolio Showcase</h4>
+            <p>Upload your work. Get discovered by clients, NGOs and event organizers across Kigali.</p>
+          </div>
+        </div>
+        <div class="overview-feature reveal reveal-delay-3">
+          <span class="num">04</span>
+          <div>
+            <h4>Gig Marketplace</h4>
+            <p>Browse and apply for paid creative jobs. No middleman. 5% commission only on success.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── VIDEO CHALLENGES SECTION ── -->
+  <section>
+    <div class="section-label">Our Journey</div>
+    <h2 class="section-title">5 Challenges, <span>1 Mission</span></h2>
+    <p class="section-desc">Follow GoalDriven Elabers through every stage — from introducing our vision in Nyamirambo to officially launching CreativeLink in the community.</p>
+    <div class="challenges-grid">
+
+      <!-- Challenge 1 — Native MP4 -->
+      <div class="challenge-card reveal">
+        <div class="video-wrap">
+          <video src="assets/challenge1.mp4" controls preload="metadata" playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:#0a1628;"></video>
+        </div>
+        <div class="challenge-info">
+          <span class="challenge-badge">Challenge 1</span>
+          <h4>Introduction</h4>
+          <p>We introduce GoalDriven Elabers, our vision for the platform, and the vibrant creative community of Nyamirambo that inspired it all.</p>
+        </div>
+      </div>
+
+      <!-- Challenge 2 — Native MP4 -->
+      <div class="challenge-card reveal reveal-delay-1">
+        <div class="video-wrap">
+          <video src="assets/challenge2.mp4" controls preload="metadata" playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:#0a1628;"></video>
+        </div>
+        <div class="challenge-info">
+          <span class="challenge-badge">Challenge 2</span>
+          <h4>Discover Africa</h4>
+          <p>Celebrating the unrecognized stories, victories, and creative achievements happening across Africa that the world rarely hears about.</p>
+        </div>
+      </div>
+
+      <!-- Challenge 3 — Native MP4 -->
+      <div class="challenge-card reveal reveal-delay-2">
+        <div class="video-wrap">
+          <video src="assets/challenge3.mp4" controls preload="metadata" playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:#0a1628;"></video>
+        </div>
+        <div class="challenge-info">
+          <span class="challenge-badge">Challenge 3</span>
+          <h4>Help Lab</h4>
+          <p>Community giveback in action — our team visited the most vulnerable members of Nyamirambo to show love and solidarity.</p>
+        </div>
+      </div>
+
+      <!-- Challenge 4 -->
+      <div class="challenge-card reveal reveal-delay-3">
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/ZpcYdry_sYA" title="Challenge 4 — Stakeholder Research" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="challenge-info">
+          <span class="challenge-badge">Challenge 4</span>
+          <h4>Stakeholder Research</h4>
+          <p>We went to the field — interviewing artists, designers, and cultural leaders including the Nyamirambo Women Center to understand the real challenges.</p>
+        </div>
+      </div>
+
+      <!-- Challenge 5 — Native MP4 -->
+      <div class="challenge-card reveal reveal-delay-4">
+        <div class="video-wrap">
+          <video
+            src="assets/challenge5.mp4"
+            controls
+            preload="metadata"
+            playsinline
+            style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:#0a1628;"
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="challenge-info">
+          <span class="challenge-badge" style="background:rgba(212,175,55,0.2);color:#d4af37;">Challenge 5 · Final 🏆</span>
+          <h4>Launching Our Mission</h4>
+          <p>After deep community research, we officially launch CreativeLink in Nyamirambo — turning creative talent into sustainable careers.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── POSTER GALLERY ── -->
+  <section>
+    <div class="section-label">Visual Identity</div>
+    <h2 class="section-title">Our <span>brand materials</span></h2>
+    <div class="poster-row">
+      <div class="poster-item reveal">
+        <img src="assets/poster_elab.png" alt="E-Lab Competition Poster" />
+        <div class="poster-label">E-Lab Competition</div>
+      </div>
+      <div class="poster-item reveal reveal-delay-1">
+        <img src="assets/poster_community.png" alt="Community Outreach Poster" />
+        <div class="poster-label">Community Outreach</div>
+      </div>
+      <div class="poster-item reveal reveal-delay-2">
+        <img src="assets/poster_launch.png" alt="Platform Launch Poster" />
+        <div class="poster-label">Platform Launch</div>
+      </div>
+      <div class="poster-item reveal reveal-delay-3">
+        <img src="assets/poster_brand.png" alt="Team Brand Poster" />
+        <div class="poster-label">Team & Brand</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GROUP PHOTOS GALLERY ── -->
+  <section>
+    <div class="section-label">Our Journey</div>
+    <h2 class="section-title">GoalDriven Elabers <span>in the field</span></h2>
+    <p class="section-desc">Real moments from our journey — researching in Nyamirambo, working at ALU, and building something that matters.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;">
+      <div style="grid-column:span 2;border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:16/9;">
+        <img src="assets/group1.jpeg" alt="GoalDriven Elabers team" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:9/16;">
+        <img src="assets/group7.jpeg" alt="GoalDriven Elabers" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:4/3;">
+        <img src="assets/group3.jpeg" alt="GoalDriven Elabers at ALU" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:4/3;">
+        <img src="assets/group6.jpeg" alt="GoalDriven Elabers BE BOLD" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:4/3;">
+        <img src="assets/group4.jpeg" alt="GoalDriven Elabers Nyamirambo research" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px;">
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:1;">
+        <img src="assets/group2.jpeg" alt="GoalDriven Elabers team" style="width:100%;height:100%;object-fit:cover;display:block;object-position:center top;"/>
+      </div>
+      <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:1;">
+        <img src="assets/group5.jpeg" alt="GoalDriven Elabers highlight" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+      <div style="grid-column:span 2;border-radius:var(--radius-lg);overflow:hidden;border:1px solid rgba(46,156,202,0.15);aspect-ratio:16/9;">
+        <img src="assets/group4.jpeg" alt="GoalDriven Elabers research visit" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </div>
+    </div>
+  </section>
+  <div class="band">
+    <p class="band-quote">"Creativity is abundant in Nyamirambo.<br/><span>What is missing is the system that turns it into a livelihood.</span>"</p>
+    <p class="band-attr">— GoalDriven Elabers, E-Lab 2025</p>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" />
+      <p>Turning Nyamirambo's creative talent into sustainable careers through the CreativeLink platform.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Pages</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">The Problem</a></li>
+        <li><a href="platform.html">Platform</a></li>
+        <li><a href="impact.html">Impact</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="platform.html#skills">Skills Training</a></li>
+        <li><a href="platform.html#mentors">Mentorship</a></li>
+        <li><a href="platform.html#portfolio">Portfolio</a></li>
+        <li><a href="platform.html#gigs">Gig Marketplace</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">@alupreneurship</a></li>
+        <li><a href="#">@creativelink.rw</a></li>
+        <li><a href="contact.html">Join the Platform</a></li>
+        <li><a href="contact.html">Partner With Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 <span>GoalDriven Elabers</span> · ALU E-Lab</span>
+    <span>Nyamirambo · Kigali · Rwanda</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

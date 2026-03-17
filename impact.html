@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impact & Stats — CreativeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    .page-hero {
+      padding: 100px 80px 60px;
+      background: radial-gradient(ellipse 80% 60% at 20% 0%, rgba(27,79,138,0.3) 0%, transparent 70%), var(--navy);
+      border-bottom: 1px solid rgba(46,156,202,0.12);
+    }
+
+    /* Big stats hero */
+    .impact-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: rgba(46,156,202,0.1);
+      border: 1px solid rgba(46,156,202,0.15);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .impact-stat {
+      background: rgba(13,27,42,0.95);
+      padding: 48px 32px;
+      text-align: center;
+      transition: background var(--transition);
+    }
+    .impact-stat:hover { background: rgba(27,79,138,0.2); }
+    .impact-stat .num {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--sky);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .impact-stat .label { font-size: 0.88rem; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    .impact-stat .sub { font-size: 0.78rem; color: #3d6b4a; font-style: italic; }
+
+    /* Year projections */
+    .year-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .year-card {
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      border: 1px solid rgba(46,156,202,0.15);
+      background: rgba(27,79,138,0.08);
+      transition: all var(--transition);
+    }
+    .year-card:hover { border-color: rgba(46,156,202,0.35); transform: translateY(-4px); }
+    .year-card.highlighted { border-color: var(--sky); background: rgba(46,156,202,0.07); }
+    .year-label {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 20px;
+    }
+    .year-metrics { display: flex; flex-direction: column; gap: 14px; }
+    .year-metric { display: flex; justify-content: space-between; align-items: center; }
+    .year-metric .k { font-size: 0.88rem; color: #2d5a3d; }
+    .year-metric .v { font-family: var(--font-display); font-weight: 700; color: var(--navy); font-size: 1rem; }
+    .year-divider { height: 1px; background: rgba(46,156,202,0.1); }
+
+    /* Financial bars */
+    .finance-row {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .fin-item { }
+    .fin-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
+    .fin-label .name { color: var(--text); font-weight: 500; }
+    .fin-label .amount { color: var(--sky); font-family: var(--font-mono); font-weight: 600; }
+    .fin-bar-bg {
+      height: 10px;
+      background: rgba(46,156,202,0.1);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .fin-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sky), var(--blue));
+      border-radius: 5px;
+      transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* KPI table */
+    .kpi-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .kpi-table th {
+      background: rgba(27,79,138,0.3);
+      color: var(--sky);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 14px 20px;
+      text-align: left;
+    }
+    .kpi-table td {
+      padding: 14px 20px;
+      font-size: 0.9rem;
+      color: var(--text);
+      border-bottom: 1px solid rgba(46,156,202,0.08);
+    }
+    .kpi-table tr:hover td { background: rgba(46,156,202,0.04); }
+    .kpi-table td:first-child { color: var(--navy); font-weight: 500; }
+    .kpi-table td:not(:first-child) { font-family: var(--font-mono); color: var(--sky); }
+
+    /* SDG pills */
+    .sdg-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .sdg-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(27,79,138,0.15);
+      border: 1px solid rgba(46,156,202,0.2);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      transition: all var(--transition);
+    }
+    .sdg-pill:hover { border-color: rgba(46,156,202,0.4); background: rgba(46,156,202,0.08); }
+    .sdg-num {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--sky);
+      min-width: 36px;
+    }
+    .sdg-text h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .sdg-text p { font-size: 0.78rem; color: #2d5a3d; }
+
+    /* Photo row */
+    .impact-photos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .impact-photo-slot {
+      aspect-ratio: 4/3;
+      background: rgba(27,79,138,0.1);
+      border: 2px dashed rgba(46,156,202,0.2);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; color: #3d6b4a;
+      font-size: 0.8rem; text-align: center; padding: 16px;
+      transition: all var(--transition);
+    }
+    .impact-photo-slot:hover { border-color: rgba(46,156,202,0.4); }
+    .impact-photo-slot .ico { font-size: 2rem; opacity: 0.4; }
+
+    @media (max-width: 1024px) {
+      .impact-hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .year-grid { grid-template-columns: 1fr; }
+      .impact-photos { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .page-hero { padding: 80px 24px 48px; }
+      .impact-hero-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="index.html"><img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" /></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="problem.html">The Problem</a></li>
+    <li><a href="platform.html">Platform</a></li>
+    <li><a href="impact.html">Impact</a></li>
+    <li><a href="contact.html" class="nav-cta">Join Us</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="page">
+
+  <div class="page-hero">
+    <div class="section-label">Impact & Metrics</div>
+    <h1 class="section-title" style="font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:16px;">Numbers that <span>matter</span></h1>
+    <p style="font-size:1.1rem;color:#2d5a3d;max-width:620px;line-height:1.75;">Every target is grounded in community research. Every projection is conservative and evidence-based. Here is what CreativeLink will deliver.</p>
+  </div>
+
+  <!-- IMPACT STATS GRID -->
+  <section>
+    <div class="impact-hero-stats reveal">
+      <div class="impact-stat">
+        <div class="num" data-target="500" data-suffix="+">0</div>
+        <div class="label">Active Users</div>
+        <div class="sub">Year 1 target</div>
+      </div>
+      <div class="impact-stat">
+        <div class="num" data-target="150" data-suffix="+">0</div>
+        <div class="label">Paid Gigs</div>
+        <div class="sub">Secured via platform</div>
+      </div>
+      <div class="impact-stat">
+        <div class="num" data-target="200" data-suffix="+">0</div>
+        <div class="label">Mentor Connections</div>
+        <div class="sub">Year 1 target</div>
+      </div>
+      <div class="impact-stat">
+        <div class="num" data-target="10" data-prefix="RWF " data-suffix="M">0</div>
+        <div class="label">User Earnings</div>
+        <div class="sub">Collective Year 1 goal</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 3-YEAR PROJECTIONS -->
+  <section>
+    <div class="section-label">3-Year Roadmap</div>
+    <h2 class="section-title">Growth <span>projections</span></h2>
+    <p class="section-desc">Conservative projections based on comparable platform launches in East African markets.</p>
+    <div class="year-grid">
+      <div class="year-card reveal">
+        <div class="year-label">Year 1 — Launch</div>
+        <div class="year-metrics">
+          <div class="year-metric"><span class="k">Registered users</span><span class="v">500</span></div>
+          <div class="year-divider"></div>
+          <div class="year-metric"><span class="k">Premium subscribers</span><span class="v">80 (16%)</span></div>
+          <div class="year-metric"><span class="k">Active mentors</span><span class="v">10</span></div>
+          <div class="year-metric"><span class="k">Gigs completed</span><span class="v">150</span></div>
+          <div class="year-metric"><span class="k">Revenue</span><span class="v">$13,720</span></div>
+          <div class="year-metric"><span class="k">Expenses</span><span class="v">$13,600</span></div>
+          <div class="year-divider"></div>
+          <div class="year-metric"><span class="k">Net result</span><span class="v" style="color:#4CAF50;">+$120</span></div>
+        </div>
+      </div>
+      <div class="year-card highlighted reveal reveal-delay-1">
+        <div class="year-label">Year 2 — Growth</div>
+        <div class="year-metrics">
+          <div class="year-metric"><span class="k">Registered users</span><span class="v">1,500</span></div>
+          <div class="year-divider"></div>
+          <div class="year-metric"><span class="k">Premium subscribers</span><span class="v">300 (20%)</span></div>
+          <div class="year-metric"><span class="k">Active mentors</span><span class="v">30</span></div>
+          <div class="year-metric"><span class="k">Gigs completed</span><span class="v">500</span></div>
+          <div class="year-metric"><span class="k">Revenue</span><span class="v">$44,890</span></div>
+          <div class="year-metric"><span class="k">Expenses</span><span class="v">$23,600</span></div>
+          <div class="year-divider"></div>
+          <div class="year-metric"><span class="k">Net surplus</span><span class="v" style="color:#4CAF50;">+$21,290</span></div>
+        </div>
+      </div>
+      <div class="year-card reveal reveal-delay-2">
+        <div class="year-label">Year 3 — Scale</div>
+        <div class="year-metrics">
+          <div class="year-metric"><span class="k">Registered users</span><span class="v">4,000</span></div>
+          <div class="year-divider"></div>
+          <div class="year-metric"><span class="k">Premium subscribers</span><span class="v">960 (24%)</span></div>
+          <div class="year-metric"><span class="k">Active mentors</span><span class="v">80</span></div>
+          <div class="year-metric"><span class="k">Gigs completed</span><span class="v">1,500</span></div>
+          <div class="year-metric"><span class="k">Revenue</span><span class="v">$124,216</span></div>
+          <div class="year-metric"><span class="k">Expenses</span><span class="v">$48,400</span></div>
+          <div class="year-divider"></div>
+          <div class="year-metric"><span class="k">Net surplus</span><span class="v" style="color:#4CAF50;">+$75,816</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- REVENUE BREAKDOWN -->
+  <section>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+      <div>
+        <div class="section-label">Revenue Streams</div>
+        <h2 class="section-title">Year 1 <span>revenue</span></h2>
+        <p style="color:#2d5a3d;margin-bottom:40px;line-height:1.75;">Six diversified income streams mean no single point of failure. The platform earns from multiple sources simultaneously.</p>
+        <div class="finance-row" id="finRows">
+          <div class="fin-item reveal">
+            <div class="fin-label"><span class="name">NGO/Grant Cohort Funding</span><span class="amount">$5,000</span></div>
+            <div class="fin-bar-bg"><div class="fin-bar-fill" style="width:0%" data-w="36"></div></div>
+          </div>
+          <div class="fin-item reveal reveal-delay-1">
+            <div class="fin-label"><span class="name">Business Listings</span><span class="amount">$2,100</span></div>
+            <div class="fin-bar-bg"><div class="fin-bar-fill" style="width:0%" data-w="15"></div></div>
+          </div>
+          <div class="fin-item reveal reveal-delay-2">
+            <div class="fin-label"><span class="name">Event Sponsorships</span><span class="amount">$2,000</span></div>
+            <div class="fin-bar-bg"><div class="fin-bar-fill" style="width:0%" data-w="14"></div></div>
+          </div>
+          <div class="fin-item reveal reveal-delay-3">
+            <div class="fin-label"><span class="name">Freemium Subscriptions</span><span class="amount">$1,800</span></div>
+            <div class="fin-bar-bg"><div class="fin-bar-fill" style="width:0%" data-w="13"></div></div>
+          </div>
+          <div class="fin-item reveal reveal-delay-4">
+            <div class="fin-label"><span class="name">Gig Transaction Commission (5%)</span><span class="amount">$1,500</span></div>
+            <div class="fin-bar-bg"><div class="fin-bar-fill" style="width:0%" data-w="11"></div></div>
+          </div>
+          <div class="fin-item reveal">
+            <div class="fin-label"><span class="name">Digital Certificates</span><span class="amount">$1,320</span></div>
+            <div class="fin-bar-bg"><div class="fin-bar-fill" style="width:0%" data-w="9"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:24px;padding:16px 20px;background:rgba(46,156,202,0.08);border:1px solid rgba(46,156,202,0.2);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:700;color:var(--navy);">Total Year 1 Revenue</span>
+          <span style="font-family:var(--font-display);font-size:1.5rem;font-weight:900;color:var(--sky);">$13,720</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Full KPI Table</div>
+        <h2 class="section-title">All <span>metrics</span></h2>
+        <p style="color:#2d5a3d;margin-bottom:32px;line-height:1.75;">Every metric has a measurement method and a responsible team member.</p>
+        <div style="border:1px solid rgba(46,156,202,0.15);border-radius:var(--radius-lg);overflow:hidden;">
+          <table class="kpi-table">
+            <thead>
+              <tr>
+                <th>KPI</th><th>Year 1</th><th>Year 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Active Users</td><td>500</td><td>4,000</td></tr>
+              <tr><td>Module Completion Rate</td><td>60%</td><td>70%</td></tr>
+              <tr><td>Mentor Connections</td><td>200</td><td>2,000</td></tr>
+              <tr><td>Paid Gigs Secured</td><td>150</td><td>1,500</td></tr>
+              <tr><td>User Earnings (RWF)</td><td>10M</td><td>80M</td></tr>
+              <tr><td>Income Increase Reported</td><td>40%</td><td>65%</td></tr>
+              <tr><td>Certificates Issued</td><td>200</td><td>1,800</td></tr>
+              <tr><td>Monthly Retention Rate</td><td>40%</td><td>55%</td></tr>
+              <tr><td>Creative Unemployment ↓</td><td>20%</td><td>80%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SDG ALIGNMENT -->
+  <section>
+    <div class="section-label">Global Goals</div>
+    <h2 class="section-title">SDG <span>alignment</span></h2>
+    <p class="section-desc">CreativeLink directly contributes to four United Nations Sustainable Development Goals.</p>
+    <div class="sdg-grid">
+      <div class="sdg-pill reveal">
+        <div class="sdg-num">SDG 1</div>
+        <div class="sdg-text">
+          <h4>No Poverty</h4>
+          <p>Direct income generation for creative youth</p>
+        </div>
+      </div>
+      <div class="sdg-pill reveal reveal-delay-1">
+        <div class="sdg-num">SDG 4</div>
+        <div class="sdg-text">
+          <h4>Quality Education</h4>
+          <p>Accessible skills training in local languages</p>
+        </div>
+      </div>
+      <div class="sdg-pill reveal reveal-delay-2">
+        <div class="sdg-num">SDG 8</div>
+        <div class="sdg-text">
+          <h4>Decent Work & Growth</h4>
+          <p>Formalizing the informal creative economy</p>
+        </div>
+      </div>
+      <div class="sdg-pill reveal reveal-delay-3">
+        <div class="sdg-num">SDG 10</div>
+        <div class="sdg-text">
+          <h4>Reduced Inequality</h4>
+          <p>Market access for underserved urban communities</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- IMPACT PHOTOS -->
+  <section>
+    <div class="section-label">Impact Stories</div>
+    <h2 class="section-title">Faces of <span>change</span></h2>
+    <p class="section-desc">Upload photos of the community, youth, and activities to bring this page to life.</p>
+    <div class="impact-photos">
+      <div class="impact-photo-slot reveal">
+        <span class="ico">📸</span>
+        <span>Youth success story photo<br/><small>Upload photo here</small></span>
+      </div>
+      <div class="impact-photo-slot reveal reveal-delay-1">
+        <span class="ico">📸</span>
+        <span>Community event photo<br/><small>Upload photo here</small></span>
+      </div>
+      <div class="impact-photo-slot reveal reveal-delay-2">
+        <span class="ico">📸</span>
+        <span>Mentor session photo<br/><small>Upload photo here</small></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE BAND -->
+  <div class="band">
+    <p class="band-quote">"By 2030, CreativeLink will help reduce creative youth unemployment<br/><span>in Nyamirambo by 80%."</span></p>
+    <p class="band-attr">— GoalDriven Elabers Impact Target</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" />
+      <p>Turning Nyamirambo's creative talent into sustainable careers through the CreativeLink platform.</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="problem.html">The Problem</a></li><li><a href="platform.html">Platform</a></li>
+      <li><a href="impact.html">Impact</a></li><li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul>
+      <li><a href="platform.html#skills">Skills Training</a></li><li><a href="platform.html#mentors">Mentorship</a></li>
+      <li><a href="platform.html#portfolio">Portfolio</a></li><li><a href="platform.html#gigs">Gig Marketplace</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul>
+      <li><a href="#">@alupreneurship</a></li><li><a href="#">@creativelink.rw</a></li>
+      <li><a href="contact.html">Join the Platform</a></li><li><a href="contact.html">Partner With Us</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 <span>GoalDriven Elabers</span> · ALU E-Lab</span>
+    <span>Nyamirambo · Kigali · Rwanda</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // Animate revenue bars on scroll
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.fin-bar-fill').forEach(bar => {
+          setTimeout(() => { bar.style.width = bar.dataset.w + '%'; }, 200);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.getElementById('finRows') && barObserver.observe(document.getElementById('finRows'));
+</script>
+</body>
+</html>

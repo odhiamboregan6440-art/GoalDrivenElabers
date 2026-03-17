@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Platform — CreativeLink</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    .page-hero {
+      padding: 100px 80px 60px;
+      background: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(27,79,138,0.3) 0%, transparent 70%), var(--navy);
+      border-bottom: 1px solid rgba(46,156,202,0.12);
+    }
+
+    /* Pillar sections */
+    .pillar {
+      padding: 100px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .pillar.reverse { direction: rtl; }
+    .pillar.reverse > * { direction: ltr; }
+    .pillar-num {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(46,156,202,0.12);
+      line-height: 1;
+      margin-bottom: -16px;
+    }
+    .pillar h2 { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; line-height: 1.2; }
+    .pillar h2 span { color: var(--sky); }
+    .pillar p { color: #2d5a3d; line-height: 1.8; margin-bottom: 20px; font-size: 1rem; }
+    .pillar-features { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+    .pillar-feat {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.92rem; color: var(--text);
+    }
+    .pillar-feat::before {
+      content: '✓';
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(46,156,202,0.15);
+      border: 1px solid rgba(46,156,202,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--sky);
+      flex-shrink: 0;
+    }
+
+    /* Pillar visual / media slot */
+    .pillar-visual {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(46,156,202,0.15);
+      background: rgba(27,79,138,0.1);
+      position: relative;
+    }
+    .screen-mock {
+      aspect-ratio: 9/16;
+      max-height: 520px;
+      background: rgba(13,27,42,0.9);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(46,156,202,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .screen-mock .mock-bar {
+      height: 48px;
+      background: rgba(27,79,138,0.4);
+      border-bottom: 1px solid rgba(46,156,202,0.15);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+    .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mock-title { font-size: 0.78rem; font-weight: 600; color: var(--sky); margin-left: 8px; }
+    .mock-body { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .mock-card {
+      background: rgba(46,156,202,0.08);
+      border: 1px solid rgba(46,156,202,0.15);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .mock-card-title { font-size: 0.78rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .mock-card-bar { height: 6px; background: rgba(46,156,202,0.2); border-radius: 3px; margin-bottom: 4px; }
+    .mock-card-bar.filled { background: linear-gradient(90deg, var(--sky), var(--blue)); }
+    .mock-card-sub { font-size: 0.68rem; color: #3d6b4a; }
+    .mock-btn {
+      margin-top: 4px;
+      background: var(--sky);
+      color: var(--navy);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    /* Photo slot inside pillar */
+    .pillar-photo-slot {
+      aspect-ratio: 4/3;
+      background: rgba(27,79,138,0.1);
+      border: 2px dashed rgba(46,156,202,0.25);
+      border-radius: var(--radius-lg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; color: #3d6b4a;
+      font-size: 0.82rem; text-align: center;
+      padding: 24px;
+    }
+    .pillar-photo-slot .ico { font-size: 2.5rem; opacity: 0.4; }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .pricing-card {
+      background: rgba(27,79,138,0.1);
+      border: 1px solid rgba(46,156,202,0.15);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      text-align: center;
+      transition: all var(--transition);
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--sky);
+      background: rgba(46,156,202,0.08);
+    }
+    .pricing-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--sky);
+      color: var(--navy);
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 4px 16px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: var(--glow); }
+    .p-tier { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; color: var(--sky); text-transform: uppercase; margin-bottom: 12px; }
+    .p-price { font-family: var(--font-display); font-size: 2.5rem; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
+    .p-price span { font-size: 1rem; color: #3d6b4a; font-weight: 400; }
+    .p-desc { font-size: 0.85rem; color: #2d5a3d; margin-bottom: 24px; }
+    .p-features { list-style: none; display: flex; flex-direction: column; gap: 10px; text-align: left; margin-bottom: 28px; }
+    .p-features li { font-size: 0.88rem; color: var(--text); display: flex; gap: 10px; align-items: flex-start; }
+    .p-features li::before { content: '✓'; color: var(--sky); font-weight: 700; }
+    .p-features li.no::before { content: '✗'; color: #3d6b4a; }
+    .p-features li.no { color: #3d6b4a; }
+
+    /* Tech stack */
+    .tech-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .tech-tag {
+      background: rgba(46,156,202,0.08);
+      border: 1px solid rgba(46,156,202,0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--sky);
+    }
+
+    @media (max-width: 1024px) {
+      .pillar { grid-template-columns: 1fr; gap: 48px; padding: 80px 40px; }
+      .pillar.reverse { direction: ltr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .page-hero { padding: 80px 24px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="nav-logo" href="index.html"><img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" /></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="problem.html">The Problem</a></li>
+    <li><a href="platform.html">Platform</a></li>
+    <li><a href="impact.html">Impact</a></li>
+    <li><a href="contact.html" class="nav-cta">Join Us</a></li>
+  </ul>
+  <div class="nav-hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="page">
+
+  <div class="page-hero">
+    <div class="section-label">The Platform</div>
+    <h1 class="section-title" style="font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:16px;"><span>CreativeLink</span><br/>Platform</h1>
+    <p style="font-size:1.1rem;color:#2d5a3d;max-width:620px;line-height:1.75;">Mobile-first. Bilingual. Community-rooted. Four integrated pillars that take a creative youth from raw talent to sustainable income.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px;">
+      <span class="pill">📱 Mobile-first</span>
+      <span class="pill">🇷🇼 Kinyarwanda</span>
+      <span class="pill">🇫🇷 French</span>
+      <span class="pill">🆓 Free tier</span>
+      <span class="pill">🏅 Digital certificates</span>
+    </div>
+  </div>
+
+  <!-- ── PILLAR 1: SKILLS ── -->
+  <div id="skills" class="pillar">
+    <div class="reveal">
+      <div class="pillar-num">01</div>
+      <h2>Skills <span>Training</span></h2>
+      <p>Bite-sized learning modules covering tailoring, music production, graphic design, photography, and crafts — structured into tracks and available in both Kinyarwanda and French.</p>
+      <p>Each module is designed for low-bandwidth mobile connections and takes 10–20 minutes to complete. Progress is tracked and displayed in the learner's dashboard.</p>
+      <div class="pillar-features">
+        <div class="pillar-feat">5 skill tracks: tailoring, music, design, photography, crafts</div>
+        <div class="pillar-feat">Full Kinyarwanda and French content — no English required</div>
+        <div class="pillar-feat">Designed for low-bandwidth smartphones</div>
+        <div class="pillar-feat">Progress badges and completion tracking</div>
+        <div class="pillar-feat">Digital certificates issued on completion (3,000 RWF)</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <!-- PHOTO/VIDEO SLOT: Replace with actual platform screenshot or photo -->
+      <div class="pillar-photo-slot">
+        <span class="ico">📚</span>
+        <p><strong>Skills training module screenshot</strong><br/>or platform photo<br/><small>Upload image here</small></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── PILLAR 2: MENTORS ── -->
+  <div id="mentors" class="pillar reverse">
+    <div class="reveal">
+      <div class="pillar-num">02</div>
+      <h2>Mentor <span>Matching</span></h2>
+      <p>Browse verified local creative professionals — photographers, graphic designers, tailors, musicians — and book direct sessions. No referral needed. No gate-keepers.</p>
+      <p>Mentors post their availability, specialty, and portfolio. Youth message them directly, book sessions, and leave reviews. Year 1 target: 10 active mentors, 200 connections.</p>
+      <div class="pillar-features">
+        <div class="pillar-feat">Verified local professional mentor network</div>
+        <div class="pillar-feat">Direct messaging and session booking</div>
+        <div class="pillar-feat">Mentor profiles with portfolio and specialization</div>
+        <div class="pillar-feat">Review and rating system for quality assurance</div>
+        <div class="pillar-feat">Mentor stipends introduced in Year 2</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <!-- PHOTO/VIDEO SLOT -->
+      <div class="pillar-photo-slot">
+        <span class="ico">🤝</span>
+        <p><strong>Mentorship session photo</strong><br/>or mentor profile screenshot<br/><small>Upload image here</small></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── PILLAR 3: PORTFOLIO ── -->
+  <div id="portfolio" class="pillar">
+    <div class="reveal">
+      <div class="pillar-num">03</div>
+      <h2>Portfolio <span>Showcase</span></h2>
+      <p>Upload photos and videos of your work. Get a shareable profile link. Be discovered by event organizers, NGOs, businesses, and clients across Kigali — without leaving Nyamirambo.</p>
+      <p>Free users can post up to 5 portfolio items. Premium users get unlimited uploads, priority placement in search results, and featured placement on the home feed.</p>
+      <div class="pillar-features">
+        <div class="pillar-feat">Public profile with shareable link</div>
+        <div class="pillar-feat">Photo and video portfolio upload</div>
+        <div class="pillar-feat">Searchable by skill type and location</div>
+        <div class="pillar-feat">Visible to NGOs, businesses and event organizers</div>
+        <div class="pillar-feat">Premium: unlimited uploads + priority placement</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <!-- PHOTO/VIDEO SLOT -->
+      <div class="pillar-photo-slot">
+        <span class="ico">🎨</span>
+        <p><strong>Portfolio showcase screenshot</strong><br/>or creative youth photo<br/><small>Upload image here</small></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── PILLAR 4: GIGS ── -->
+  <div id="gigs" class="pillar reverse">
+    <div class="reveal">
+      <div class="pillar-num">04</div>
+      <h2>Gig <span>Marketplace</span></h2>
+      <p>Businesses and event organizers post creative jobs. Youth browse, apply, get hired. Payments flow through the platform. CreativeLink takes a 5% commission — only when youth earn. Zero cost until success.</p>
+      <p>Year 1 target: 60 gigs posted by businesses, 150 completed by youth, generating RWF 10 million in collective user earnings.</p>
+      <div class="pillar-features">
+        <div class="pillar-feat">Businesses post paid creative gigs</div>
+        <div class="pillar-feat">Youth apply and get hired directly</div>
+        <div class="pillar-feat">Secure payment through the platform</div>
+        <div class="pillar-feat">5% commission only on successful gigs</div>
+        <div class="pillar-feat">Free users: 2 applications/month. Premium: unlimited</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <!-- PHOTO/VIDEO SLOT -->
+      <div class="pillar-photo-slot">
+        <span class="ico">💼</span>
+        <p><strong>Gig marketplace screenshot</strong><br/>or youth working on gig<br/><small>Upload image here</small></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PRICING -->
+  <section>
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Built for <span>local purchasing power</span></h2>
+    <p class="section-desc">Every price point is benchmarked to what Nyamirambo's youth can actually afford. Free access is never limited for essential features.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="p-tier">Free</div>
+        <div class="p-price">0 <span>RWF</span></div>
+        <div class="p-desc">Forever free. No credit card.</div>
+        <ul class="p-features">
+          <li>Profile + 5 portfolio items</li>
+          <li>3 introductory skill modules</li>
+          <li>Browse mentor profiles</li>
+          <li>View gig listings</li>
+          <li>2 gig applications/month</li>
+          <li>Community forum</li>
+          <li class="no">Full module library</li>
+          <li class="no">Direct mentor messaging</li>
+          <li class="no">Digital certificates</li>
+        </ul>
+        <a href="contact.html" class="btn btn-outline" style="width:100%;justify-content:center;">Join Free →</a>
+      </div>
+      <div class="pricing-card featured reveal reveal-delay-1">
+        <div class="p-tier">Premium</div>
+        <div class="p-price">2,000 <span>RWF/mo</span></div>
+        <div class="p-desc">~$1.50/month — less than a moto ride.</div>
+        <ul class="p-features">
+          <li>Unlimited portfolio items</li>
+          <li>Full module library (all tracks)</li>
+          <li>Direct mentor messaging</li>
+          <li>Unlimited gig applications</li>
+          <li>Priority search placement</li>
+          <li>Digital certificates</li>
+          <li>Progress analytics dashboard</li>
+        </ul>
+        <a href="contact.html" class="btn btn-primary" style="width:100%;justify-content:center;">Get Premium →</a>
+      </div>
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="p-tier">Business</div>
+        <div class="p-price">5,000 <span>RWF/mo</span></div>
+        <div class="p-desc">Post gigs. Source Kigali's best creative talent.</div>
+        <ul class="p-features">
+          <li>Unlimited gig postings</li>
+          <li>Browse all talent profiles</li>
+          <li>Featured listing placement</li>
+          <li>Direct messaging with youth</li>
+          <li>Talent search & filters</li>
+          <li>5% transaction fee on hires</li>
+        </ul>
+        <a href="contact.html" class="btn btn-outline" style="width:100%;justify-content:center;">List Your Business →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TECH STACK -->
+  <section>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+      <div>
+        <div class="section-label">Technology</div>
+        <h2 class="section-title">Built to <span>scale</span></h2>
+        <p style="color:#2d5a3d;line-height:1.8;margin-bottom:20px;">CreativeLink is built on an open-source stack that minimizes licensing costs and prevents vendor lock-in. Once the content is created, scaling to 10× more users costs near zero.</p>
+        <p style="color:#2d5a3d;line-height:1.8;margin-bottom:28px;">Cloud hosting scales automatically with user growth. Low-data-mode ensures the platform remains fast even on Rwanda's rural mobile networks.</p>
+        <div class="tech-row">
+          <span class="tech-tag">React.js</span>
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">AWS / Cloud</span>
+          <span class="tech-tag">MTN MoMo API</span>
+          <span class="tech-tag">i18n (rw/fr)</span>
+          <span class="tech-tag">PWA</span>
+          <span class="tech-tag">Low-data mode</span>
+        </div>
+      </div>
+      <!-- PHOTO SLOT -->
+      <div class="pillar-photo-slot" style="aspect-ratio:4/3;">
+        <span class="ico">💻</span>
+        <p><strong>Platform demo / wireframe</strong><br/>or tech team photo<br/><small>Upload image here</small></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <div class="band">
+    <p class="band-quote">"Free to join.<br/><span>Designed to earn."</span></p>
+    <p class="band-attr">— CreativeLink platform principle</p>
+    <div style="margin-top:28px;">
+      <a href="contact.html" class="btn btn-primary">Join CreativeLink →</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo_horizontal.png" alt="GoalDriven Elabers" />
+      <p>Turning Nyamirambo's creative talent into sustainable careers through the CreativeLink platform.</p>
+    </div>
+    <div class="footer-col"><h4>Pages</h4><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="problem.html">The Problem</a></li><li><a href="platform.html">Platform</a></li>
+      <li><a href="impact.html">Impact</a></li><li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Platform</h4><ul>
+      <li><a href="#skills">Skills Training</a></li><li><a href="#mentors">Mentorship</a></li>
+      <li><a href="#portfolio">Portfolio</a></li><li><a href="#gigs">Gig Marketplace</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul>
+      <li><a href="#">@alupreneurship</a></li><li><a href="#">@creativelink.rw</a></li>
+      <li><a href="contact.html">Join the Platform</a></li><li><a href="contact.html">Partner With Us</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 <span>GoalDriven Elabers</span> · ALU E-Lab</span>
+    <span>Nyamirambo · Kigali · Rwanda</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
